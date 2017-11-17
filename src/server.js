@@ -33,7 +33,7 @@ function configureServer() {
         passphrase: sslPassPhrase,
     };
 
-    app.use(router.routes())
+    app.use(router.routes());
 
     https.createServer(options, app.callback()).listen(443);
     http.createServer(app.callback()).listen(80);
