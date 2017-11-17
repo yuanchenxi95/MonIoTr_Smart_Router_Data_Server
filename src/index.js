@@ -1,10 +1,9 @@
 module.exports.init = function() {
-    const dotenv = require('dotenv');
-    dotenv.config({ path: __dirname + '/config/env/.env' });
+    const { configureEnv } = require('./dotenv');
+    configureEnv();
 
     const logger = require('./logger');
     logger.configureLog();
-
     const server = require('./server');
     server.configureServer();
 };
