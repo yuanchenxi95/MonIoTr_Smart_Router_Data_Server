@@ -1,0 +1,36 @@
+{
+  "name": "moniotr_smart_router_data_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "node_modules/eslint/bin/eslint.js ./",
+    "fix": "node_modules/eslint/bin/eslint.js ./ --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuanchenxi95/MonIoTr_Smart_Router_Data_Server.git"
+  },
+  "author": "Chenxi Yuan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yuanchenxi95/MonIoTr_Smart_Router_Data_Server/issues"
+  },
+  "homepage": "https://github.com/yuanchenxi95/MonIoTr_Smart_Router_Data_Server#readme",
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "axios": "^0.17.0",
+    "koa": "^2.4.1",
+    "koa-bodyparser": "^4.2.0",
+    "koa-compress": "^2.0.0",
+    "koa-router": "^7.2.1",
+    "koa-session": "^5.5.0",
+    "log4js": "^2.3.11",
+    "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "eslint": "^4.11.0",
+    "eslint-config-google": "^0.9.1"
+  }
+}
