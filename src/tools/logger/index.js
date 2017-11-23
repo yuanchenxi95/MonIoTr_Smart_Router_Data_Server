@@ -13,8 +13,10 @@ function configureLog() {
  * @return {Logger}
  */
 const errorLogger = log4js.getLogger('error');
+const defaultLogger = log4js.getLogger('default');
 
 module.exports = {
     configureLog,
     errorLogger,
+    defaultLogger,
 };

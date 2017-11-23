@@ -19,15 +19,17 @@
   },
   "homepage": "https://github.com/yuanchenxi95/MonIoTr_Smart_Router_Data_Server#readme",
   "dependencies": {
-    "dotenv": "^4.0.0",
+    "app-root-path": "^2.0.1",
     "axios": "^0.17.0",
+    "dotenv": "^4.0.0",
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
     "koa-compress": "^2.0.0",
     "koa-router": "^7.2.1",
     "koa-session": "^5.5.0",
+    "lodash": "^4.17.4",
     "log4js": "^2.3.11",
-    "lodash": "^4.17.4"
+    "mongoose": "^4.13.4"
   },
   "devDependencies": {
     "eslint": "^4.11.0",

@@ -1,4 +1,5 @@
-const { errorLogger } = require('../../logger');
+const appRoot = require('app-root-path');
+const { errorLogger } = require(appRoot.resolve('./src/tools/logger'));
 
 /**
  * the responder middleware
