@@ -25,6 +25,7 @@ function configureServer() {
     const http = require('http');
     const compress = require('koa-compress');
     const session = require('koa-session');
+    const cors = require('koa-cors');
 
     const { router } = require('./controller');
 
@@ -34,6 +35,7 @@ function configureServer() {
 
     app.use(compress());
     app.use(session({ key: cookieSecret }, app));
+    app.use(cors());
 
     app.use(router.routes());
 

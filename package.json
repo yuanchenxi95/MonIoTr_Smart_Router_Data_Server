@@ -27,6 +27,7 @@
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
     "koa-compress": "^2.0.0",
+    "koa-cors": "0.0.16",
     "koa-router": "^7.2.1",
     "koa-session": "^5.5.0",
     "lodash": "^4.17.4",
