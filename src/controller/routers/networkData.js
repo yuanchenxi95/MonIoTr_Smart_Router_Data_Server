@@ -10,9 +10,8 @@ const db = low(adapter);
 const networkData = new Router();
 
 networkData.get('/all', async function(ctx, next) {
-    ctx.body = {
-        'Hello': 'World',
-    };
+    ctx.body = db.get('todayData');
+    ctx.type = 'application/javascript';
     await next();
 });
 
