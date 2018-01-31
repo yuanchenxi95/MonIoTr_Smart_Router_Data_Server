@@ -6,6 +6,6 @@ module.exports.init = async function() {
     logger.configureLog();
 
     const server = require('./server');
-    await server.configureDatabase();
+    // await server.configureDatabase();
     server.configureServer();
 };

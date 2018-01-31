@@ -13,8 +13,10 @@ router.get('/hello', async function(ctx, next) {
 });
 
 const user = require('./user');
+const networkData = require('./networkData');
 
 router.use('/user', user.routes());
+router.use('/networkData', networkData.routes());
 
 router.use();
 

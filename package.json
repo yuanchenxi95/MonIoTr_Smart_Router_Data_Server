@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "node_modules/eslint/bin/eslint.js ./",
-    "fix": "node_modules/eslint/bin/eslint.js ./ --fix"
+    "fix": "node_modules/eslint/bin/eslint.js ./ --fix",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
     "app-root-path": "^2.0.1",
     "axios": "^0.17.0",
     "dotenv": "^4.0.0",
+    "joi": "^13.1.1",
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
     "koa-compress": "^2.0.0",
@@ -29,6 +31,7 @@
     "koa-session": "^5.5.0",
     "lodash": "^4.17.4",
     "log4js": "^2.3.11",
+    "lowdb": "^1.0.0",
     "mongoose": "^4.13.4"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 const appRoot = require('app-root-path');
-const { errorLogger } = require(appRoot.resolve('./src/tools/logger'));
+const { errorLogger, infoLogger } = require(appRoot.resolve('./src/tools/logger'));
 
 /**
  * the responder middleware
@@ -8,7 +8,10 @@ const { errorLogger } = require(appRoot.resolve('./src/tools/logger'));
  */
 async function responder(ctx, next) {
     try {
+        const start = Date.now();
         await next();
+        const ms = Date.now() - start;
+        infoLogger.info(`${ctx.method} ${ctx.url} - ${ms}`);
     } catch (e) {
         ctx.status = e.status || 500;
         ctx.body = e.message || 'Server Error';

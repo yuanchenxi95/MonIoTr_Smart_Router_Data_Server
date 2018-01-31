@@ -1,6 +1,5 @@
 const Router = require('koa-router');
 
-
 const user = new Router();
 
 user.get('/testUser', async function(ctx, next) {

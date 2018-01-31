@@ -14,9 +14,11 @@ function configureLog() {
  */
 const errorLogger = log4js.getLogger('error');
 const defaultLogger = log4js.getLogger('default');
+const infoLogger = log4js.getLogger('access');
 
 module.exports = {
     configureLog,
     errorLogger,
     defaultLogger,
+    infoLogger,
 };
