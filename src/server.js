@@ -39,7 +39,9 @@ function configureServer() {
 
     app.use(router.routes());
 
-    http.createServer(app.callback()).listen(3000, defaultLogger.info('listen to port 3000'));
+    let port = process.env.PORT || 3000;
+
+    http.createServer(app.callback()).listen(port, defaultLogger.info('listen to port 3000'));
 }
 
 module.exports = {
