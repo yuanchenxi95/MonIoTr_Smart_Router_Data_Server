@@ -7,16 +7,18 @@ router.prefix('/api');
 router.use(bodyParser());
 router.use(responder);
 
-router.get('/hello', async function(ctx, next) {
-    ctx.body = 'Hello World';
-    await next();
-});
+// router.get('/hello', async function(ctx, next) {
+//     ctx.body = 'Hello World';
+//     await next();
+// });
 
 const user = require('./user');
 const networkData = require('./networkData');
+const device = require('./device');
 
 router.use('/user', user.routes());
 router.use('/networkData', networkData.routes());
+router.use('/device', device.routes());
 
 router.use();
 

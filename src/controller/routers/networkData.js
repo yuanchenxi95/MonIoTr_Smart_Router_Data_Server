@@ -11,7 +11,7 @@ const networkData = new Router();
 
 networkData.get('/all', async function(ctx, next) {
     ctx.body = db.get('todayData');
-    ctx.type = 'application/javascript';
+    ctx.type = 'application/json';
     await next();
 });
 
