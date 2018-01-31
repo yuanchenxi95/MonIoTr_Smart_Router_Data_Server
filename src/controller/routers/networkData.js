@@ -15,6 +15,12 @@ networkData.get('/all', async function(ctx, next) {
     await next();
 });
 
+networkData.get('/lastUpdate', async function(ctx, next) {
+    ctx.body = db.get('todayDataLog');
+    ctx.type = 'application/json';
+    await next();
+});
+
 const todayDataSchema = Joi.object().keys({
     id: Joi.string().required(),
     data: Joi.array().required(),
@@ -29,6 +35,10 @@ networkData.post('/todayData',
             await next();
             return;
         }
+
+        db.get('todayDataLog')
+            .set('last_updated_time', Date.now())
+            .write();
 
         db.get('todayData')
             .set(ctx.request.body.id, ctx.request.body.data)

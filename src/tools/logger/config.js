@@ -10,7 +10,7 @@ module.exports = {
     },
     categories: {
         default: { appenders: ['out', 'default'], level: 'info' },
-        access: { appenders: ['access'], level: 'info' },
+        access: { appenders: ['access', 'out'], level: 'info' },
         error: { appenders: ['error'], level: 'error' },
     },
 };
