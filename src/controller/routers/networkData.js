@@ -48,4 +48,14 @@ networkData.post('/todayData',
     }
 );
 
+networkData.post('/logFileData/:deviceId/:date',
+    async function(ctx, next) {
+        console.log('deviceId: ' + ctx.params.deviceId);
+        console.log('date: ' + ctx.params.date);
+        console.log(ctx.request.body);
+        console.log('-------------------------------');
+        ctx.status = 200;
+        await next();
+    });
+
 module.exports = networkData;
