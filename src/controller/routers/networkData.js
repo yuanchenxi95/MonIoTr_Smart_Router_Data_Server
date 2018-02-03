@@ -4,6 +4,8 @@ const FileSync = require('lowdb/adapters/FileSync');
 const appRoot = require('app-root-path');
 const Joi = require('joi');
 
+const { storeLogFileData } = require('../modules/networkData');
+
 const adapter = new FileSync(appRoot.resolve('./db.json'));
 const db = low(adapter);
 
@@ -48,13 +50,58 @@ networkData.post('/todayData',
     }
 );
 
-networkData.post('/logFileData/:deviceId/:date',
+networkData.post('/logFileData/:deviceId/:date/:requestType',
     async function(ctx, next) {
-        console.log('deviceId: ' + ctx.params.deviceId);
-        console.log('date: ' + ctx.params.date);
-        console.log(ctx.request.body);
-        console.log('-------------------------------');
+        let logFileDataSchema = Joi.array().items(
+            Joi.object().keys({
+                src_ip: Joi.string().required(),
+                dst_ip: Joi.string().required(),
+                src_port: Joi.string().required(),
+                dst_port: Joi.string().required(),
+                host: Joi.string().required(),
+                http_method: Joi.string().required(),
+                time_stamp: Joi.string().required(),
+            })
+        );
+        const validationResult = Joi.validate(ctx.request.body, logFileDataSchema);
+
+        let paramsShcema = Joi.object().keys({
+            deviceId: Joi.string().required(),
+            date: Joi.string().required(),
+            requestType: Joi.string().required(),
+        });
+
+        const paramValidationResult = Joi.validate(ctx.params, paramsShcema);
+
+        if (validationResult.error !== null) {
+            ctx.status = 400;
+            ctx.message = validationResult.error.details[0].message;
+            await next();
+            return;
+        }
+
+        if (paramValidationResult.error !== null) {
+            ctx.status = 400;
+            ctx.message = validationResult.error.details[0].message;
+            await next();
+            return;
+        }
+
+        let packetArray = ctx.request.body;
+        let {
+            deviceId,
+            date,
+            requestType,
+        } = ctx.params;
+
+        storeLogFileData({
+            deviceId,
+            date,
+            requestType,
+            packetArray,
+        });
         ctx.status = 200;
+
         await next();
     });
 
