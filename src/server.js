@@ -25,7 +25,7 @@ function configureServer() {
     const http = require('http');
     const compress = require('koa-compress');
     const session = require('koa-session');
-    const cors = require('koa-cors');
+    const cors = require('koa2-cors');
 
     const { router } = require('./controller');
 
