@@ -3,5 +3,8 @@
   "count": 0,
   "todayData": {},
   "todayDataLog": {},
-  "logFileData": {}
+  "logFileData": {},
+  "live": {
+    "data": []
+  }
 }

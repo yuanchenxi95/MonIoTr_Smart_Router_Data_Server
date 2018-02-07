@@ -20,6 +20,10 @@ async function storeLogFileData({ deviceId, date, requestType, packetArray }) {
     }
     deviceData[date][requestType] = deviceData[date][requestType].concat(packetArray);
 
+    let liveQuery = db.get('live');
+    let liveData = liveQuery.value();
+    liveData.set('data', packetArray);
+
     logFileQuery.set(deviceId, deviceData)
         .write();
 }
