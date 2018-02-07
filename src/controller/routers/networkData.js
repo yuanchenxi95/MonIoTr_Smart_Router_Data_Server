@@ -4,7 +4,7 @@ const FileSync = require('lowdb/adapters/FileSync');
 const appRoot = require('app-root-path');
 const Joi = require('joi');
 
-const { storeLogFileData } = require('../modules/networkData');
+const { storeLogFileData, getLogFileData } = require('../modules/networkData');
 
 const adapter = new FileSync(appRoot.resolve('./db.json'));
 const db = low(adapter);
@@ -50,6 +50,40 @@ networkData.post('/todayData',
     }
 );
 
+networkData.get('/logFileData/:deviceId/:date/:requestType',
+    async function(ctx, next) {
+        let paramsShcema = Joi.object().keys({
+            deviceId: Joi.string().required(),
+            date: Joi.string().required(),
+            requestType: Joi.string().required(),
+        });
+
+        const paramValidationResult = Joi.validate(ctx.params, paramsShcema);
+
+        if (paramValidationResult.error !== null) {
+            ctx.status = 400;
+            ctx.message = paramValidationResult.error.details[0].message;
+            await next();
+            return;
+        }
+
+        let {
+            deviceId,
+            date,
+            requestType,
+        } = ctx.params;
+
+        let logData = await getLogFileData({
+            deviceId,
+            date,
+            requestType,
+        });
+        ctx.body = {
+            data: logData,
+        };
+        ctx.status = 200;
+    });
+
 networkData.post('/logFileData/:deviceId/:date/:requestType',
     async function(ctx, next) {
         let logFileDataSchema = Joi.array().items(
@@ -82,7 +116,7 @@ networkData.post('/logFileData/:deviceId/:date/:requestType',
 
         if (paramValidationResult.error !== null) {
             ctx.status = 400;
-            ctx.message = validationResult.error.details[0].message;
+            ctx.message = paramValidationResult.error.details[0].message;
             await next();
             return;
         }
