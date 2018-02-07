@@ -23,6 +23,12 @@ networkData.get('/lastUpdate', async function(ctx, next) {
     await next();
 });
 
+networkData.get('/live', async function(ctx, next) {
+    ctx.body = await db.get('live').value();
+    ctx.type = 'application/json';
+    await next();
+});
+
 const todayDataSchema = Joi.object().keys({
     id: Joi.string().required(),
     data: Joi.array().required(),
