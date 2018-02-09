@@ -3,4 +3,4 @@ process.on('unhandledRejection', function(error) {
     throw new Error(error);
 });
 
-require('./src/index').init();
+require('./src/index');
