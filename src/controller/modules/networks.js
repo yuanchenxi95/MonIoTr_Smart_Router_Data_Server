@@ -6,18 +6,18 @@ const appRoot = require('app-root-path');
 const adapter = new FileSync(appRoot.resolve('./db.json'));
 const db = low(adapter);
 
-let samplePost = {
-    'forNetwork': '34',
-    'forDevice': 'ALL_COMBINED',
-    'bucketSize': 60,
-    'bucketProps': [
-        'ACTIVITY_COUNT', 'THIRD_PARTY_COUNT', 'NON_THIRD_PARTY_COUNT'
-    ],
-    'startMS': '1518480000',
-    'endMS': '1518534800',
-};
+// let samplePost = {
+//     'forNetwork': '34',
+//     'forDevice': 'ALL_COMBINED',
+//     'bucketSize': 60,
+//     'bucketProps': [
+//         'ACTIVITY_COUNT', 'THIRD_PARTY_COUNT', 'NON_THIRD_PARTY_COUNT'
+//     ],
+//     'startMS': '1518480000',
+//     'endMS': '1518534800',
+// };
 
-console.log(JSON.stringify(samplePost));
+// console.log(JSON.stringify(samplePost));
 
 
 async function getAggregateDataByTime(aggregateByTimeQuery) {
