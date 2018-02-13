@@ -5,6 +5,7 @@ const FileSync = require('lowdb/adapters/FileSync');
 const appRoot = require('app-root-path');
 const adapter = new FileSync(appRoot.resolve('./db.json'));
 const db = low(adapter);
+const moment = require('moment');
 
 // let samplePost = {
 //     'forNetwork': '34',
@@ -37,17 +38,16 @@ async function getAggregateDataByTime(aggregateByTimeQuery) {
         return [];
     }
 
-    let todayDataLog = await db.get('todayDataLog').value();
-    let todayDate = todayDataLog['today'];
+    startMS = Number(startMS);
+    endMS = Number(endMS);
 
+    let startDate = moment.unix(startMS).format('YYYY-MM-DD');
     let logFileQuery = db.get('logFileData');
-    let dateData = await logFileQuery.get(todayDate).value();
+    let dateData = await logFileQuery.get(startDate).value();
     if (_.isNil(dateData)) {
         return {};
     }
     let result = {};
-    startMS = Number(startMS);
-    endMS = Number(endMS);
 
     _.forOwn(dateData, function(deviceData) {
         if (! _.isNil(deviceData['http'])) {
