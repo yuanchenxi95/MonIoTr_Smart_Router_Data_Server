@@ -2,23 +2,22 @@ const Router = require('koa-router');
 const Joi = require('joi');
 
 const device = new Router();
-const { getAggregateDataByTime } = require('../modules/network');
+const { getAggregateDataByTime } = require('../modules/networks');
 
-device.get('/:networkId/analyze/aggregateDataByTime', async (ctx, next) => {
-
-    let logFileDataSchema = Joi.object().keys({
-        forNetwork: Joi.string().required(),
+device.post('/:networkId/analyze/aggregateDataByTime', async (ctx, next) => {
+    let aggregateDataByTimeSchema = Joi.object().keys({
+        forNetwork: Joi.number().required(),
         forDevice: Joi.string().required(),
-        bucketSize: Joi.number.required(),
+        bucketSize: Joi.number().required(),
         bucketProps: Joi.array().required(),
         startMS: Joi.string().required(),
         endMS: Joi.string().required(),
     });
-    const validationResult = Joi.validate(ctx.request.body, logFileDataSchema);
+    const validationResult = Joi.validate(ctx.request.body, aggregateDataByTimeSchema);
 
     if (validationResult.error !== null) {
         ctx.status = 400;
-        ctx.message = validationResult.error.details[0].message;
+        ctx.message = 'Post Body Error: ' + validationResult.error.details[0].message;
         await next();
         return;
     }
@@ -36,8 +35,12 @@ device.get('/:networkId/analyze/aggregateDataByTime', async (ctx, next) => {
         return;
     }
 
+    let aggregateDataByTime = await getAggregateDataByTime(ctx.request.body);
+    ctx.body = {
+        data: aggregateDataByTime,
+    };
     ctx.type = 'application/json';
-
+    await(next);
 });
 
 module.exports = device;
