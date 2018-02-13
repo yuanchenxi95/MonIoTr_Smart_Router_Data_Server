@@ -24,7 +24,7 @@ async function storeLogFileData({ deviceId, date, requestType, packetArray }) {
     liveQuery.set('data', packetArray)
         .write();
 
-    logFileQuery.set(dateData, dateData)
+    logFileQuery.set(data, dateData)
         .write();
 }
 
