@@ -31,7 +31,6 @@ async function getAggregateDataByTime(aggregateByTimeQuery) {
         // return [];
     }
     if (forDevice !== 'ALL_COMBINED') {
-
         return [];
     }
     if (!_.includes(bucketProps, 'ACTIVITY_COUNT')) {
@@ -44,7 +43,7 @@ async function getAggregateDataByTime(aggregateByTimeQuery) {
     let logFileQuery = db.get('logFileData');
     let dateData = await logFileQuery.get(todayDate).value();
     if (_.isNil(dateData)) {
-        return [];
+        return {};
     }
     let result = {};
     startMS = Number(startMS);
