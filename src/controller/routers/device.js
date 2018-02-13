@@ -10,7 +10,7 @@ device.get('/:deviceId/aggregateSimple', async (ctx, next) => {
         data: deviceData,
     };
     ctx.type = 'application/json';
-
+    await(next);
 });
 
 module.exports = device;

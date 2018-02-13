@@ -8,39 +8,39 @@ const db = low(adapter);
 
 async function storeLogFileData({ deviceId, date, requestType, packetArray }) {
     let logFileQuery = db.get('logFileData');
-    let deviceData = await logFileQuery.get(deviceId).value();
-    if (deviceData === undefined) {
-        deviceData = {};
+    let dateData = await logFileQuery.get(date).value();
+    if (dateData === undefined) {
+        dateData = {};
     }
-    if (deviceData[date] === undefined) {
-        deviceData[date] = {};
+    if (dateData[deviceId] === undefined) {
+        dateData[deviceId] = {};
     }
-    if (deviceData[date][requestType] === undefined) {
-        deviceData[date][requestType] = [];
+    if (dateData[deviceId][requestType] === undefined) {
+        dateData[deviceId][requestType] = [];
     }
-    deviceData[date][requestType] = deviceData[date][requestType].concat(packetArray);
+    dateData[deviceId][requestType] = dateData[deviceId][requestType].concat(packetArray);
 
     let liveQuery = db.get('live');
     liveQuery.set('data', packetArray)
         .write();
 
-    logFileQuery.set(deviceId, deviceData)
+    logFileQuery.set(dateData, dateData)
         .write();
 }
 
 async function getLogFileData({ deviceId, date, requestType }) {
     let logFileQuery = db.get('logFileData');
-    let deviceData = await logFileQuery.get(deviceId).value();
-    if (deviceData === undefined) {
+    let dateData = await logFileQuery.get(date).value();
+    if (dateData === undefined) {
         return [];
     }
-    if (deviceData[date] === undefined) {
+    if (dateData[deviceId] === undefined) {
         return [];
     }
-    if (deviceData[date][requestType] === undefined) {
+    if (dateData[deviceId][requestType] === undefined) {
         return [];
     }
-    return deviceData[date][requestType];
+    return dateData[deviceId][requestType];
 }
 
 module.exports = {

@@ -105,13 +105,13 @@ networkData.post('/logFileData/:deviceId/:date/:requestType',
         );
         const validationResult = Joi.validate(ctx.request.body, logFileDataSchema);
 
-        let paramsShcema = Joi.object().keys({
+        let paramsSchema = Joi.object().keys({
             deviceId: Joi.string().required(),
             date: Joi.string().required(),
             requestType: Joi.string().required(),
         });
 
-        const paramValidationResult = Joi.validate(ctx.params, paramsShcema);
+        const paramValidationResult = Joi.validate(ctx.params, paramsSchema);
 
         if (validationResult.error !== null) {
             ctx.status = 400;
