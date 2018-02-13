@@ -23,8 +23,10 @@ async function storeLogFileData({ deviceId, date, requestType, packetArray }) {
     let liveQuery = db.get('live');
     liveQuery.set('data', packetArray)
         .write();
+
     let todayDataLogQuery = db.get('todayDataLog');
-    todayDataLogQuery.set('today', date);
+    todayDataLogQuery.set('today', date)
+        .write();
 
     logFileQuery.set(date, dateData)
         .write();
