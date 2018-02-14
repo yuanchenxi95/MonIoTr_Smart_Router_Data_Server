@@ -1,13 +1,11 @@
 const Router = require('koa-router');
-const low = require('lowdb');
-const FileSync = require('lowdb/adapters/FileSync');
-const appRoot = require('app-root-path');
+
 const Joi = require('joi');
 
 const { storeLogFileData, getLogFileData } = require('../modules/networkData');
 
-const adapter = new FileSync(appRoot.resolve('./db.json'));
-const db = low(adapter);
+const { db } = require( '../modules/_db.js');
+
 
 const networkData = new Router();
 

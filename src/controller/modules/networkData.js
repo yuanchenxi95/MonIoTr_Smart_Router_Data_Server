@@ -1,10 +1,7 @@
 const _ = require('lodash');
 
-const low = require('lowdb');
-const FileSync = require('lowdb/adapters/FileSync');
-const appRoot = require('app-root-path');
-const adapter = new FileSync(appRoot.resolve('./db.json'));
-const db = low(adapter);
+const { db } = require( '../modules/_db.js');
+
 
 async function storeLogFileData({ deviceId, date, requestType, packetArray }) {
     let logFileQuery = db.get('logFileData');

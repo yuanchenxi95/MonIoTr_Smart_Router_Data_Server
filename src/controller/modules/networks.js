@@ -1,10 +1,6 @@
 const _ = require('lodash');
+const { db } = require( '../modules/_db.js');
 
-const low = require('lowdb');
-const FileSync = require('lowdb/adapters/FileSync');
-const appRoot = require('app-root-path');
-const adapter = new FileSync(appRoot.resolve('./db.json'));
-const db = low(adapter);
 const moment = require('moment');
 
 // let samplePost = {
