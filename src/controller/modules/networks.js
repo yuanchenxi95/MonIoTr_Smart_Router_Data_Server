@@ -16,7 +16,6 @@ const moment = require('moment');
 
 // console.log(JSON.stringify(samplePost));
 
-
 async function getAggregateDataByTime(aggregateByTimeQuery) {
     let { forNetwork,
         forDevice,
@@ -38,7 +37,7 @@ async function getAggregateDataByTime(aggregateByTimeQuery) {
     endMS = Number(endMS);
 
     // shouldn't use standard eastern time
-    let startDate = moment.unix(startMS).tz('America/New_Yor').format('YYYY-MM-DD');
+    let startDate = moment.unix(startMS).tz('America/New_York').format('YYYY-MM-DD');
     let logFileQuery = db.get('logFileData');
     let dateData = await logFileQuery.get(startDate).value();
     if (_.isNil(dateData)) {
