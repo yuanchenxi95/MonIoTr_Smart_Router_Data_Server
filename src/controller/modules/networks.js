@@ -37,7 +37,8 @@ async function getAggregateDataByTime(aggregateByTimeQuery) {
     startMS = Number(startMS);
     endMS = Number(endMS);
 
-    let startDate = moment.unix(startMS).format('YYYY-MM-DD');
+    // shouldn't use standard eastern time
+    let startDate = moment.unix(startMS).tz('America/New_Yor').format('YYYY-MM-DD');
     let logFileQuery = db.get('logFileData');
     let dateData = await logFileQuery.get(startDate).value();
     if (_.isNil(dateData)) {
