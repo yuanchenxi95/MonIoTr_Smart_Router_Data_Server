@@ -65,7 +65,18 @@ async function getAggregateDataByTime(aggregateByTimeQuery) {
             });
         }
     } );
-    return result;
+
+    let processedResult = [];
+
+    _.forOwn(result, (value, key) => {
+        let newObj = {
+            'ACTIVITY_COUNT': value,
+            'timestampMS': key,
+        };
+        processedResult.push(newObj);
+    });
+
+    return processedResult;
 }
 
 module.exports = {
