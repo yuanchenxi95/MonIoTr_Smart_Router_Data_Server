@@ -71,7 +71,7 @@ async function getAggregateDataByTime(aggregateByTimeQuery) {
     _.forOwn(result, (value, key) => {
         let newObj = {
             'ACTIVITY_COUNT': value,
-            'timestampMS': key,
+            'timestamp': key,
         };
         processedResult.push(newObj);
     });
