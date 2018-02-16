@@ -1,32 +1,38 @@
-const dotenv = require('./tools/dotenv');
-dotenv.configureEnv();
+async function startServer() {
+    const dotenv = require('./tools/dotenv');
+    dotenv.configureEnv();
 
-const logger = require('./tools/logger');
-logger.configureLog();
+    const logger = require('./tools/logger');
+    logger.configureLog();
 
-const { defaultLogger } = require('./tools/logger');
+    const { defaultLogger } = require('./tools/logger');
 
-const { sequelize, Sequelize } = require('./_db');
+    let { initDB } = require('./_db');
+    await initDB();
+    require('./model').httpDataMethods;
+    const Koa = require('koa');
+    const http = require('http');
+    const compress = require('koa-compress');
+    const session = require('koa-session');
+    const cors = require('koa2-cors');
 
+    const { router } = require('./controller');
 
-const Koa = require('koa');
-const http = require('http');
-const compress = require('koa-compress');
-const session = require('koa-session');
-const cors = require('koa2-cors');
+    const cookieSecret = process.env.COOKIE_SECRET;
+    const app = new Koa();
+    app.keys = [cookieSecret];
 
-const { router } = require('./controller');
+    app.use(compress());
+    app.use(session({ key: cookieSecret }, app));
+    app.use(cors());
 
-const cookieSecret = process.env.COOKIE_SECRET;
-const app = new Koa();
-app.keys = [cookieSecret];
+    app.use(router.routes());
 
-app.use(compress());
-app.use(session({ key: cookieSecret }, app));
-app.use(cors());
+    let port = process.env.PORT || 3000;
 
-app.use(router.routes());
+    http.createServer(app.callback()).listen(port, defaultLogger.info('listen to port 3000'));
+}
 
-let port = process.env.PORT || 3000;
-
-http.createServer(app.callback()).listen(port, defaultLogger.info('listen to port 3000'));
+module.exports = {
+    startServer,
+};

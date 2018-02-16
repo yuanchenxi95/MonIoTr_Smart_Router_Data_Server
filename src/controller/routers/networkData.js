@@ -128,14 +128,10 @@ networkData.post('/logFileData/:deviceId/:date/:requestType',
         let packetArray = ctx.request.body;
         let {
             deviceId,
-            date,
-            requestType,
         } = ctx.params;
 
         storeLogFileData({
             deviceId,
-            date,
-            requestType,
             packetArray,
         });
         ctx.status = 200;

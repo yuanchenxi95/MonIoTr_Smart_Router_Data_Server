@@ -6,11 +6,8 @@ const { checkEnvVariables } = require('./util');
 function configureEnv() {
     dotenv.config({ path: appRoot.resolve('./config/env/.env') });
     const envList = [
-        'MYSQL_DATABASE_NAME',
-        'MYSQL_HOST',
-        'MYSQL_USERNAME',
-        'MYSQL_PASSWORD',
         'COOKIE_SECRET',
+        'MONGO_DB_ADDRESS',
     ];
     checkEnvVariables(envList);
 }

@@ -1,20 +1,6 @@
 const _ = require('lodash');
-const { db } = require( '../modules/_db.js');
 
 const moment = require('moment');
-
-// let samplePost = {
-//     'forNetwork': '34',
-//     'forDevice': 'ALL_COMBINED',
-//     'bucketSize': 60,
-//     'bucketProps': [
-//         'ACTIVITY_COUNT', 'THIRD_PARTY_COUNT', 'NON_THIRD_PARTY_COUNT'
-//     ],
-//     'startMS': '1518480000',
-//     'endMS': '1518534800',
-// };
-
-// console.log(JSON.stringify(samplePost));
 
 async function getAggregateDataByTime(aggregateByTimeQuery) {
     let { forNetwork,

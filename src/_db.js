@@ -1,41 +1,20 @@
-const appRoot = require('app-root-path');
-const { defaultLogger } = require(appRoot.resolve('./src/tools/logger'));
-const Sequelize = require('sequelize');
+async function initDB() {
+    const mongoose = require('mongoose');
+    const { errorLogger, defaultLogger } = require('./tools/logger');
 
-const sequelize = new Sequelize(
-    process.env.MYSQL_DATABASE_NAME,
-    process.env.MYSQL_USERNAME,
-    process.env.MYSQL_PASSWORD,
-    {
-        host: process.env.MYSQL_HOST,
-        dialect: 'mysql',
-
-        pool: {
-            max: 5,
-            min: 0,
-            acquire: 30000,
-            idle: 10000,
-        },
-        logging: false,
-        // http://docs.sequelizejs.com/manual/tutorial/querying.html#operators
-        operatorsAliases: false,
+    const mongoDB = process.env.MONGO_DB_ADDRESS;
+    mongoose.connect(mongoDB);
+    mongoose.Promise = global.Promise;
+    const connection = mongoose.connection;
+    connection.on('open', function() {
+        defaultLogger.info('MongoDB connected');
     });
-
-sequelize.authenticate()
-    .then(
-        () => {
-            defaultLogger.info('Connection has been established successfully.');
-        }
-    )
-    .catch(
-        (err) => {
-            defaultLogger.error('Unable to connect to the database:', err);
-            throw err;
-        }
-    );
-
+    connection.on('error', (e) => {
+        errorLogger.error('MongoDB connection error:');
+    });
+}
 
 module.exports = {
-    sequelize,
-    Sequelize,
+    initDB,
 };
+
