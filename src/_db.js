@@ -3,15 +3,15 @@ async function initDB() {
     const { errorLogger, defaultLogger } = require('./tools/logger');
 
     const mongoDB = process.env.MONGO_DB_ADDRESS;
-    mongoose.connect(mongoDB);
-    mongoose.Promise = global.Promise;
-    const connection = mongoose.connection;
-    connection.on('open', function() {
-        defaultLogger.info('MongoDB connected');
-    });
-    connection.on('error', (e) => {
-        errorLogger.error('MongoDB connection error:');
-    });
+    mongoose.connect(mongoDB)
+        .then(
+            () => {
+                defaultLogger.info('MongoDB connected');
+            },
+            (err) => {
+                errorLogger.error('MongoDB connection error:');
+            }
+        );
 }
 
 module.exports = {
