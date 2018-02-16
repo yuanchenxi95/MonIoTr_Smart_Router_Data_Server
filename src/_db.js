@@ -3,6 +3,7 @@ async function initDB() {
     const { errorLogger, defaultLogger } = require('./tools/logger');
 
     const mongoDB = process.env.MONGO_DB_ADDRESS;
+    mongoose.Promise = global.Promise;
     mongoose.connect(mongoDB)
         .then(
             () => {
