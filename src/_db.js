@@ -4,7 +4,7 @@ async function initDB() {
 
     const mongoDB = process.env.MONGO_DB_ADDRESS;
     mongoose.Promise = global.Promise;
-    mongoose.connect(mongoDB)
+    mongoose.connect(mongoDB, { useMongoClient: true })
         .then(
             () => {
                 defaultLogger.info('MongoDB connected');
