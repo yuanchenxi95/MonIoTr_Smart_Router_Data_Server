@@ -9,7 +9,6 @@ async function startServer() {
 
     let { initDB } = require('./_db');
     await initDB();
-    require('./model').httpDataMethods;
     const Koa = require('koa');
     const http = require('http');
     const compress = require('koa-compress');
