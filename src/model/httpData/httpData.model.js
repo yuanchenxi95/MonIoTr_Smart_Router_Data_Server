@@ -15,6 +15,12 @@ async function findOneAndUpdate(httpData) {
     });
 }
 
+async function getAggregateDataByTime(startMS, endMS) {
+    return await HttpDataModel.find({
+        time_stamp: { $gte: startMS, $lte: endMS },
+    });
+}
+
 // function findJobById(jobId) {
 //     return Job.findOne({_id: jobId});
 // }
@@ -56,4 +62,5 @@ async function findOneAndUpdate(httpData) {
 
 module.exports = {
     findOneAndUpdate,
+    getAggregateDataByTime,
 };
