@@ -2,15 +2,17 @@ const _ = require('lodash');
 
 const httpDataMethods = require( '../../model/httpData/httpData.model');
 
-function processDateDataArray({ dateDataArray, startMS, endMS, bucketSize }) {
+function processDateDataArray({ dateDataArray, numberStartMS, numberEndMS, bucketSize }) {
     let result = {};
-
+    if (_.isNil(dateDataArray)) {
+        throw Error('dateDataArray is undefined');
+    }
     dateDataArray.forEach((httpData) => {
         let ts = httpData['time_stamp'];
-        if (ts < endMS && ts > startMS) {
-            let k = Math.floor((ts - startMS) / bucketSize);
+        if (ts < numberEndMS && ts > numberStartMS) {
+            let k = Math.floor((ts - numberEndMS) / bucketSize);
 
-            k = k * bucketSize + startMS;
+            k = k * bucketSize + numberEndMS;
             if (_.isNil(result[k])) {
                 result[k] = 0;
             }
@@ -30,6 +32,7 @@ function processDateDataArray({ dateDataArray, startMS, endMS, bucketSize }) {
     _.sortBy(processedResult, (hd) => {
         return hd['timestamp'];
     });
+
     return processedResult;
 }
 
@@ -48,28 +51,48 @@ async function getAggregateDataByTime(aggregateByTimeQuery) {
         return [];
     }
 
-    startMS = Number(startMS);
-    endMS = Number(endMS);
+    let numberStartMS = Number(startMS);
+    let numberEndMS = Number(endMS);
 
     // if macAddresses length is 0, replace the list with all devices
     if (macAddresses.length === 0) {
         macAddresses = await httpDataMethods.getDeviceList();
     }
+    let dateDataArray = await httpDataMethods.getAggregateDataByTime(numberStartMS, numberEndMS, macAddresses);
 
     if (selectionMode === 'COMBINED') {
-        let dateDataArray = await httpDataMethods.getAggregateDataByTime(startMS, endMS, macAddresses);
         let processedDataArray = processDateDataArray({
             dateDataArray,
-            startMS,
-            endMS,
+            numberStartMS,
+            numberEndMS,
             bucketSize,
         });
         return [{
             key: 'COMBINED',
             data: processedDataArray,
         }];
-    } else if (selectionMode === 'Individual') {
+    } else if (selectionMode === 'INDIVIDUAL') {
+        let resultObj = {};
+        _.forEach(macAddresses, (macAddress) => {
+            resultObj[macAddress] = [];
+        });
+        _.forEach(dateDataArray, (data) => {
+            resultObj[data['mac_address']].push(data);
+        });
+        let resultArray = [];
+        _.forEach(resultObj, (dataArray, macAddress) => {
+            resultArray.push({
+                key: macAddress,
+                data: processDateDataArray({
+                    dateDataArray: dataArray,
+                    numberStartMS,
+                    numberEndMS,
+                    bucketSize,
+                }),
+            });
+        });
 
+        return resultArray;
     }
 }
 
