@@ -2,13 +2,14 @@ const Router = require('koa-router');
 const Joi = require('joi');
 
 const device = new Router();
-const { getAggregateDataByTime } = require('../modules/networks');
+const { getAggregateDataByTime, getDeviceList } = require('../modules/networks');
 
 device.post('/:networkId/analyze/aggregateDataByTime', async (ctx, next) => {
     let aggregateDataByTimeSchema = Joi.object().keys({
-        forNetwork: Joi.number().required(),
-        forDevice: Joi.string().required(),
+        selectionMode: Joi.string().required(),
+        macAddresses: Joi.array().required(),
         bucketSize: Joi.number().required(),
+        bucketUnit: Joi.string().required(),
         bucketProps: Joi.array().required(),
         startMS: Joi.string().required(),
         endMS: Joi.string().required(),
@@ -34,10 +35,32 @@ device.post('/:networkId/analyze/aggregateDataByTime', async (ctx, next) => {
         await next();
         return;
     }
+    let aggregateByTimeQuery = Object.assign({}, ctx.request.body, ctx.params);
 
-    let aggregateDataByTime = await getAggregateDataByTime(ctx.request.body);
+    ctx.body = await getAggregateDataByTime(aggregateByTimeQuery);
+    ctx.type = 'application/json';
+    await(next);
+});
+
+device.get('/:networkId/devices', async (ctx, next) => {
+
+    let paramsSchema = Joi.object().keys({
+        networkId: Joi.string().required(),
+    });
+
+    const paramValidationResult = Joi.validate(ctx.params, paramsSchema);
+
+    if (paramValidationResult.error !== null) {
+        ctx.status = 400;
+        ctx.message = paramValidationResult.error.details[0].message;
+        await next();
+        return;
+    }
+
+    let deviceList = await getDeviceList(ctx.params);
+
     ctx.body = {
-        data: aggregateDataByTime,
+        devices: deviceList,
     };
     ctx.type = 'application/json';
     await(next);

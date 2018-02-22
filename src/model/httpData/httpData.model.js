@@ -15,10 +15,18 @@ async function findOneAndUpdate(httpData) {
     });
 }
 
-async function getAggregateDataByTime(startMS, endMS) {
+async function getAggregateDataByTime(startMS, endMS, macAddresses) {
     return await HttpDataModel.find({
         time_stamp: { $gte: startMS, $lte: endMS },
+        mac_address: { $in: macAddresses },
     });
+}
+
+// console.log(hash(["12313213", "dafsdfb" ,"231231321"], { unorderedArrays: true }));
+// console.log(hash(["231231321", "12313213", "dafsdfb"], { unorderedArrays: true }));
+//
+async function getDeviceList() {
+    return await HttpDataModel.distinct('mac_address');
 }
 
 // function findJobById(jobId) {
@@ -63,4 +71,5 @@ async function getAggregateDataByTime(startMS, endMS) {
 module.exports = {
     findOneAndUpdate,
     getAggregateDataByTime,
+    getDeviceList,
 };
