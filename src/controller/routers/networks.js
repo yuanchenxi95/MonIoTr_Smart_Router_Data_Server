@@ -9,7 +9,6 @@ device.post('/:networkId/analyze/aggregateDataByTime', async (ctx, next) => {
         selectionMode: Joi.string().required(),
         macAddresses: Joi.array().required(),
         bucketSize: Joi.number().required(),
-        bucketUnit: Joi.string().required(),
         bucketProps: Joi.array().required(),
         startMS: Joi.string().required(),
         endMS: Joi.string().required(),
