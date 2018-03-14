@@ -1,6 +1,7 @@
 const _ = require('lodash');
 
 const httpDataMethods = require( '../../model/httpData/httpData.model');
+const deviceDataMethods = require('../../model/deviceData/deviceData.model');
 
 function processDateDataArray({ dateDataArray, numberStartMS, numberEndMS, bucketSize }) {
     let result = {};
@@ -101,12 +102,26 @@ async function getDeviceList(DeviceListQuery) {
     if (forNetwork !== '34') {
         // return [];
     }
-    let deviceList = await httpDataMethods.getDeviceList();
-    deviceList = _.sortBy(deviceList);
-    deviceList = _.map(deviceList, (macAddress) => {
-        return {
-            macAddr: macAddress,
-        };
+    let deviceMacList = await httpDataMethods.getDeviceList();
+    let deviceMappingList = await deviceDataMethods.getAllDevices();
+
+    // if the device's name is not in the database, return unidentified.
+    deviceMacList = _.sortBy(deviceMacList);
+    let deviceList = _.map(deviceMacList, (macAddress) => {
+        let mapping = _.find(deviceMappingList, {
+            mac_address: macAddress,
+        });
+        if (_.isNil(mapping)) {
+            return {
+                macAddress: macAddress,
+            };
+        } else {
+            return {
+                uuid: mapping._id,
+                alias: mapping.alias,
+                macAddress: mapping.mac_address,
+            };
+        }
     });
     return deviceList;
 }

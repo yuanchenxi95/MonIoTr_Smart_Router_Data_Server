@@ -65,4 +65,5 @@ device.get('/:networkId/devices', async (ctx, next) => {
     await(next);
 });
 
+
 module.exports = device;
