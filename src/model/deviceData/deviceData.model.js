@@ -11,6 +11,12 @@ async function findOneAndUpdate(deviceData) {
     });
 }
 
+//
+// const _ = require('lodash');
+// _.forEach(a, (obj) => {
+//     findOneAndUpdate(obj);
+// });
+
 async function getAllDevices() {
     return await HttpDataModel.find({});
 }

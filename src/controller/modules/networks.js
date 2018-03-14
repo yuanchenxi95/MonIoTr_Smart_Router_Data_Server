@@ -108,8 +108,8 @@ async function getDeviceList(DeviceListQuery) {
     // if the device's name is not in the database, return unidentified.
     deviceMacList = _.sortBy(deviceMacList);
     let deviceList = _.map(deviceMacList, (macAddress) => {
-        let mapping = _.find(deviceMappingList, {
-            mac_address: macAddress,
+        let mapping = _.find(deviceMappingList, (obj) => {
+            return obj.mac_address.toLowerCase() === macAddress.toLowerCase();
         });
         if (_.isNil(mapping)) {
             return {
