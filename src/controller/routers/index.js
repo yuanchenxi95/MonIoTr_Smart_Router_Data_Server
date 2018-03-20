@@ -22,7 +22,6 @@ router.use('/networkData', networkData.routes());
 router.use('/device', device.routes());
 router.use('/networks', networks.routes());
 
-
 router.use();
 
 module.exports = router;
