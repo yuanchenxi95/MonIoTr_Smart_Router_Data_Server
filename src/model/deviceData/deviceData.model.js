@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const _ = require('lodash');
 
 const { DeviceData } = require('./deviceData.schema');
 
@@ -9,6 +10,13 @@ async function findOneAndUpdate(deviceData) {
     return HttpDataModel.findOneAndUpdate(deviceData, deviceData, {
         upsert: true,
     });
+}
+
+async function updateDeviceList(deviceList) {
+    let updateDevicePromiseList = _.map(deviceList, (d) => {
+        return findOneAndUpdate(d);
+    });
+    return Promise.all(updateDevicePromiseList);
 }
 
 //
@@ -24,4 +32,5 @@ async function getAllDevices() {
 module.exports = {
     findOneAndUpdate,
     getAllDevices,
+    updateDeviceList,
 };

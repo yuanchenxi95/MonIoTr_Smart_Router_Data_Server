@@ -2,6 +2,8 @@ const _ = require('lodash');
 
 const { db } = require( '../modules/_db.js');
 
+const { updateDeviceList } = require('../../model/deviceData/deviceData.model');
+
 async function GetAggregateDeviceData(deviceId) {
     let deviceData = await db.get('todayData').value();
 
@@ -26,4 +28,5 @@ async function GetAggregateDeviceData(deviceId) {
 
 module.exports = {
     GetAggregateDeviceData,
+    updateDeviceList,
 };
