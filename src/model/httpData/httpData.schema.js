@@ -13,8 +13,8 @@ const HttpData = mongoose.Schema({
 
 HttpData.index({
     time_stamp: -1,
-    mac_address: 1
-})
+    mac_address: 1,
+});
 
 module.exports = {
     HttpData,
