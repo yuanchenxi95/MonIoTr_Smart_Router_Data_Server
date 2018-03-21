@@ -7,8 +7,8 @@ const HttpData = mongoose.Schema({
     dst_port: String,
     host: { type: String },
     http_method: String,
-    time_stamp: { type: Number, required: true },
-    mac_address: { type: String, required: true },
+    time_stamp: { type: Number, index: true, required: true },
+    mac_address: { type: String, index: true, required: true },
 }, { timestamps: {} });
 
 module.exports = {
