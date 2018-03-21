@@ -17,7 +17,7 @@ async function findOneAndUpdate(httpData) {
 
 async function getAggregateDataByTime(startMS, endMS, macAddresses) {
     return await HttpDataModel.find({
-        // time_stamp: { $gte: startMS, $lte: endMS },
+        time_stamp: { $gte: startMS, $lte: endMS },
         mac_address: { $in: macAddresses },
     });
 }
