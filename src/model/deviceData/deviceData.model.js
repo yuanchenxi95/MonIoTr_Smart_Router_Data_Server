@@ -7,7 +7,9 @@ const HttpDataModel = mongoose.model('DeviceData', DeviceData);
 
 
 async function findOneAndUpdate(deviceData) {
-    return HttpDataModel.findOneAndUpdate(deviceData, deviceData, {
+    return await HttpDataModel.findOneAndUpdate({
+        mac_address: deviceData.mac_address,
+    }, deviceData, {
         upsert: true,
     });
 }

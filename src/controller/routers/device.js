@@ -30,7 +30,7 @@ device.post('/updateDeviceList', async (ctx, next) => {
         return;
     }
 
-    const deviceList = ctx.request.bdoy;
+    const deviceList = ctx.request.body;
 
     await updateDeviceList(deviceList);
     ctx.status = 200;
