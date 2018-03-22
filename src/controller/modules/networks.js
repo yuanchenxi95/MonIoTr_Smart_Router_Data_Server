@@ -162,8 +162,8 @@ function processResultMap(resultMap, dimensions, metrics) {
         'metrics': metrics,
     };
     report['data'] = {};
+    report['data']['rows'] = [];
     let rows = report['data']['rows'];
-    rows = [];
 
     _.forOwn(resultMap, function(value, key) {
         rows.push({
