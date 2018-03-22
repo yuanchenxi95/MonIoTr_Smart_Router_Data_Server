@@ -161,15 +161,18 @@ function processResultMap(resultMap, dimensions, metrics) {
         'dimensions': dimensions,
         'metrics': metrics,
     };
-    report['rows'] = [];
+    report['data'] = {};
+    let rows = report['data']['rows'];
+    rows = [];
+
     _.forOwn(resultMap, function(value, key) {
-        report['rows'].push({
+        rows.push({
             'dimensions': [key],
             'metrics': [value],
         });
     });
 
-    return report;
+    return result;
 }
 
 module.exports = {
