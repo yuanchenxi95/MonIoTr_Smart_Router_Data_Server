@@ -152,8 +152,29 @@ async function processTodaysIndividualData(dimensions, metrics) {
     }
 }
 
+function processResultMap(resultMap, dimensions, metrics) {
+    let result = {
+        report: {},
+    };
+    let report = result['report'];
+    report['columns'] = {
+        'dimensions': dimensions,
+        'metrics': metrics,
+    };
+    report['rows'] = [];
+    _.forOwn(resultMap, function(value, key) {
+        report['rows'].push({
+            'dimensions': [key],
+            'metrics': [value],
+        });
+    });
+
+    return report;
+}
+
 module.exports = {
     getAggregateDataByTime,
     getDeviceList,
     processTodaysIndividualData,
+    processResultMap,
 };

@@ -2,7 +2,7 @@ const Router = require('koa-router');
 const Joi = require('joi');
 const Enum = require('higher-order-enum');
 
-const { processTodaysIndividualData } = require('../modules/networks');
+const { processTodaysIndividualData, processResultMap } = require('../modules/networks');
 
 const analyze = new Router();
 
@@ -35,7 +35,8 @@ analyze.post('/core', async (ctx, next) => {
     if (individual === reducerEnum(body.reducer)) {
         if (today === startTimeEnum(body.startTime)) {
             if (now === endTimeEnum(body.endTime)) {
-                ctx.body = await processTodaysIndividualData(body.dimensions, body.metrics);
+                let resultMap = await processTodaysIndividualData(body.dimensions, body.metrics);
+                ctx.body = processResultMap(resultMap, body.dimensions, body.metrics);
                 ctx.status = 404;
                 await next();
                 return;
