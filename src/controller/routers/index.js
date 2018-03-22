@@ -16,11 +16,13 @@ const user = require('./user');
 const networkData = require('./networkData');
 const device = require('./device');
 const networks = require('./networks');
+const analyze = require('./analyze');
 
 router.use('/user', user.routes());
 router.use('/networkData', networkData.routes());
 router.use('/device', device.routes());
 router.use('/networks', networks.routes());
+router.use('/analyze', analyze.routes());
 
 router.use();
 

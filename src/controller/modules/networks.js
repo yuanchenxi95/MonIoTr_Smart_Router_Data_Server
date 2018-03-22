@@ -2,7 +2,7 @@ const _ = require('lodash');
 
 const httpDataMethods = require( '../../model/httpData/httpData.model');
 const deviceDataMethods = require('../../model/deviceData/deviceData.model');
-
+const { getStartOfToday, getNow } = require('../util');
 function processDateDataArray({ dateDataArray, numberStartMS, numberEndMS, bucketSize }) {
     let result = {};
     if (_.isNil(dateDataArray)) {
@@ -72,7 +72,7 @@ async function getAggregateDataByTime(aggregateByTimeQuery) {
             key: 'COMBINED',
             data: processedDataArray,
         }];
-    } else if (selectionMode === 'INDIVIDUAL') {
+    } else if (selectionMode === 'individual') {
         let resultObj = {};
         _.forEach(macAddresses, (macAddress) => {
             resultObj[macAddress] = [];
@@ -126,7 +126,34 @@ async function getDeviceList(DeviceListQuery) {
     return deviceList;
 }
 
+async function processTodaysIndividualData(dimensions, metrics) {
+    if (_.indexOf(dimensions, 'macAddress') >= 0) {
+        if (_.indexOf(metrics, 'hit') >= 0) {
+            let macAddresses = await httpDataMethods.getDeviceList();
+            let numberStartMS = getStartOfToday();
+            let numberEndMS = getNow();
+            let dataAggregateMap = {};
+            let queryDataByTimePromiseList = _.map(macAddresses, (mac) => {
+                let f = async function() {
+                    dataAggregateMap[mac] =
+                        await httpDataMethods.getAggregateDataByTime(numberStartMS, numberEndMS, [mac]);
+                };
+
+                return f();
+            });
+
+            await Promise.all(queryDataByTimePromiseList);
+            let resultMap = {};
+            _.forOwn(dataAggregateMap, function(value, key) {
+                resultMap[key] = value.length;
+            });
+            return resultMap;
+        }
+    }
+}
+
 module.exports = {
     getAggregateDataByTime,
     getDeviceList,
+    processTodaysIndividualData,
 };
