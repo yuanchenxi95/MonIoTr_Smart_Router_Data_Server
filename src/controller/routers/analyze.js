@@ -37,7 +37,7 @@ analyze.post('/core', async (ctx, next) => {
             if (now === endTimeEnum(body.endTime)) {
                 let resultMap = await processTodaysIndividualData(body.dimensions, body.metrics);
                 ctx.body = processResultMap(resultMap, body.dimensions, body.metrics);
-                ctx.status = 404;
+                ctx.status = 200;
                 await next();
                 return;
             }
