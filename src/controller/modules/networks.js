@@ -3,6 +3,8 @@ const _ = require('lodash');
 const httpDataMethods = require( '../../model/httpData/httpData.model');
 const deviceDataMethods = require('../../model/deviceData/deviceData.model');
 const { getStartOfToday, getNow } = require('../util');
+const { generateDomainKey } = require('../util/domain');
+
 function processDateDataArray({ dateDataArray, numberStartMS, numberEndMS, bucketSize }) {
     let result = {};
     if (_.isNil(dateDataArray)) {
@@ -127,11 +129,11 @@ async function getDeviceList(DeviceListQuery) {
 }
 
 async function processTodaysIndividualData(dimensions, metrics) {
+    let numberStartMS = getStartOfToday();
+    let numberEndMS = getNow();
     if (_.indexOf(dimensions, 'macAddress') >= 0) {
         if (_.indexOf(metrics, 'hit') >= 0) {
             let macAddresses = await httpDataMethods.getDeviceList();
-            let numberStartMS = getStartOfToday();
-            let numberEndMS = getNow();
             let dataAggregateMap = {};
             let queryDataByTimePromiseList = _.map(macAddresses, (mac) => {
                 let f = async function() {
@@ -149,8 +151,27 @@ async function processTodaysIndividualData(dimensions, metrics) {
             });
             return resultMap;
         }
+    } else if (_.indexOf(dimensions, 'domain') >= 0) {
+        if (_.indexOf(metrics, 'hit') >= 0) {
+            let hostCountMap = await httpDataMethods.getHostCountMap(numberStartMS, numberEndMS);
+            let resultMap = {};
+
+            _.forEach(hostCountMap, (hostCount) => {
+                let domainKey = generateDomainKey(hostCount['_id']);
+                let value = resultMap[domainKey];
+                if (value) {
+                    resultMap[domainKey] += value;
+                } else {
+                    resultMap[domainKey] = hostCount['count'];
+                }
+                // resultMap[hostCount['_id']] = hostCount['count'];
+            });
+            return resultMap;
+        }
     }
 }
+
+processTodaysIndividualData(['domain'], ['hit']);
 
 function processResultMap(resultMap, dimensions, metrics) {
     let result = {

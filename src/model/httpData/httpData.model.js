@@ -16,10 +16,32 @@ async function findOneAndUpdate(httpData) {
 }
 
 async function getAggregateDataByTime(startMS, endMS, macAddresses) {
-    return await HttpDataModel.find({
+    return HttpDataModel.find({
         time_stamp: { $gte: startMS, $lte: endMS },
         mac_address: { $in: macAddresses },
     });
+}
+
+async function getHostCountMap(startMS, endMS) {
+    return HttpDataModel.aggregate([
+        {
+            $match: {
+                time_stamp: { $gte: startMS, $lte: endMS },
+            },
+        },
+        {
+            $group: {
+                _id: '$host',
+                count: { $sum: 1 },
+            },
+        },
+        {
+            $sort: { count: -1 },
+        },
+    ]);
+    // return HttpDataModel.distinct('host', {
+    //     time_stamp: { $gte: startMS, $lte: endMS },
+    // });
 }
 
 // console.log(hash(["12313213", "dafsdfb" ,"231231321"], { unorderedArrays: true }));
@@ -72,4 +94,5 @@ module.exports = {
     findOneAndUpdate,
     getAggregateDataByTime,
     getDeviceList,
+    getHostCountMap,
 };
