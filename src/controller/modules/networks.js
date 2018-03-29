@@ -158,14 +158,12 @@ async function processTodaysIndividualData(dimensions, metrics) {
 
             _.forEach(hostCountMap, (hostCount) => {
                 let domainKey = generateDomainKey(hostCount['_id']);
-                let value = resultMap[domainKey];
 
-                if (!value) {
+                if (!_.has(resultMap, domainKey)) {
                     resultMap[domainKey] = 0;
                 }
                 resultMap[domainKey] += hostCount['count'];
 
-                // resultMap[hostCount['_id']] = hostCount['count'];
             });
             return resultMap;
         }
