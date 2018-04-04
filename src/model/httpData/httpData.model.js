@@ -39,9 +39,26 @@ async function getHostCountMap(startMS, endMS) {
             $sort: { count: -1 },
         },
     ]);
-    // return HttpDataModel.distinct('host', {
-    //     time_stamp: { $gte: startMS, $lte: endMS },
-    // });
+}
+
+
+async function getHostHitEntries(startMS, endMS) {
+    return HttpDataModel.aggregate([
+        {
+            $match: {
+                time_stamp: { $gte: startMS, $lte: endMS },
+            },
+        },
+        {
+            $project: {
+                time_stamp: true,
+                host: true,
+            },
+        },
+        {
+            $sort: { count: -1 },
+        },
+    ]);
 }
 
 // console.log(hash(["12313213", "dafsdfb" ,"231231321"], { unorderedArrays: true }));
@@ -95,4 +112,5 @@ module.exports = {
     getAggregateDataByTime,
     getDeviceList,
     getHostCountMap,
+    getHostHitEntries,
 };

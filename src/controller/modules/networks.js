@@ -5,6 +5,9 @@ const deviceDataMethods = require('../../model/deviceData/deviceData.model');
 const { getStartOfToday, getNow } = require('../util');
 const { generateDomainKey } = require('../util/domain');
 
+const N_SECONDS_AGO_REGEX = /^([0-9]+)secondsAgo$/;
+
+
 function processDateDataArray({ dateDataArray, numberStartMS, numberEndMS, bucketSize }) {
     let result = {};
     if (_.isNil(dateDataArray)) {
@@ -163,14 +166,31 @@ async function processTodaysIndividualData(dimensions, metrics) {
                     resultMap[domainKey] = 0;
                 }
                 resultMap[domainKey] += hostCount['count'];
-
             });
             return resultMap;
         }
     }
 }
 
-processTodaysIndividualData(['domain'], ['hit']);
+async function processNSecondsAgoData(secondsAgo, dimensions, metrics) {
+    let stringStartMS = N_SECONDS_AGO_REGEX.exec(secondsAgo)[1];
+    let numberEndMS = getNow();
+    let numberStartMS = numberEndMS - parseInt(stringStartMS);
+
+    if (_.indexOf(dimensions, 'timestamp') >= 0) {
+        if (_.indexOf(metrics, 'destination') >= 0) {
+            let resultMap = {};
+            let hostHitMap = await httpDataMethods.getHostHitEntries(numberStartMS, numberEndMS);
+            _.forEach(hostHitMap, (hostHit) => {
+                resultMap[hostHit['time_stamp']] = hostHit['host'];
+            });
+            return resultMap;
+        }
+    }
+
+    throw Error('Unknown Parameter(s)');
+
+}
 
 function processResultMap(resultMap, dimensions, metrics) {
     let result = {
@@ -196,8 +216,10 @@ function processResultMap(resultMap, dimensions, metrics) {
 }
 
 module.exports = {
+    N_SECONDS_AGO_REGEX,
     getAggregateDataByTime,
     getDeviceList,
     processTodaysIndividualData,
     processResultMap,
+    processNSecondsAgoData,
 };
