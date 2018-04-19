@@ -179,12 +179,14 @@ async function processNSecondsAgoData(secondsAgo, dimensions, metrics) {
 
     if (_.indexOf(dimensions, 'timestamp') >= 0) {
         if (_.indexOf(metrics, 'destination') >= 0) {
-            let resultMap = {};
-            let hostHitMap = await httpDataMethods.getHostHitEntries(numberStartMS, numberEndMS);
-            _.forEach(hostHitMap, (hostHit) => {
-                resultMap[hostHit['time_stamp']] = hostHit['host'];
-            });
-            return resultMap;
+            if (_.indexOf(metrics, 'origin') >= 0) {
+                let resultMap = {};
+                let hostHitMap = await httpDataMethods.getHostHitEntries(numberStartMS, numberEndMS);
+                _.forEach(hostHitMap, (hostHit) => {
+                    resultMap[hostHit['time_stamp']] = [hostHit['src_ip'], hostHit['host']];
+                });
+                return resultMap;
+            }
         }
     }
 
@@ -206,10 +208,15 @@ function processResultMap(resultMap, dimensions, metrics) {
     let rows = report['data']['rows'];
 
     _.forOwn(resultMap, function(value, key) {
-        rows.push({
-            'dimensions': [key],
-            'metrics': [value],
-        });
+        let newObj = {};
+        newObj['dimensions'] = [key];
+
+        if (Array.isArray(value)) {
+            newObj['metrics'] = value;
+        } else {
+            newObj['metrics'] = [value];
+        }
+        rows.push(newObj);
     });
 
     return result;
