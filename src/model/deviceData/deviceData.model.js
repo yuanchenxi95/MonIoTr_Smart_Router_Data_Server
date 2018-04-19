@@ -14,6 +14,12 @@ async function findOneAndUpdate(deviceData) {
     });
 }
 
+async function findOne({ mac_address }) {
+    return await HttpDataModel.findOne({
+        mac_address,
+    });
+}
+
 async function updateDeviceList(deviceList) {
     let updateDevicePromiseList = _.map(deviceList, (d) => {
         return findOneAndUpdate(d);
@@ -35,4 +41,5 @@ module.exports = {
     findOneAndUpdate,
     getAllDevices,
     updateDeviceList,
+    findOne,
 };

@@ -53,7 +53,7 @@ async function getHostHitEntries(startMS, endMS) {
             $project: {
                 time_stamp: true,
                 host: true,
-                src_ip: true,
+                mac_address: true,
             },
         },
         {

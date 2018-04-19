@@ -182,9 +182,22 @@ async function processNSecondsAgoData(secondsAgo, dimensions, metrics) {
             if (_.indexOf(metrics, 'origin') >= 0) {
                 let resultMap = {};
                 let hostHitMap = await httpDataMethods.getHostHitEntries(numberStartMS, numberEndMS);
-                _.forEach(hostHitMap, (hostHit) => {
-                    resultMap[hostHit['time_stamp']] = [hostHit['src_ip'], hostHit['host']];
+                let promiseFunctionList = _.map(hostHitMap, (hostHit) => {
+                    let f = async function() {
+                        let resultList = [];
+                        let macAddress = hostHit['mac_address'];
+                        let deviceData = await deviceDataMethods.findOne({ mac_address: macAddress });
+                        if (_.isNil(deviceData)) {
+                            resultList.push(macAddress);
+                        } else {
+                            resultList.push(deviceData['alias']);
+                        }
+                        resultList.push(hostHit['host']);
+                        resultMap[hostHit['time_stamp']] = resultList;
+                    };
+                    return f();
                 });
+                await Promise.all(promiseFunctionList);
                 return resultMap;
             }
         }
